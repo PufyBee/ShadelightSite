@@ -11,11 +11,16 @@
     <style>
       body {
         background-color: #000000;
-        color: #f1f1f1;
+        color: #c2abf3;
         overflow-x: hidden;
       }
+
       .neon-text {
-        text-shadow: 0 0 5px #6923cc, 0 0 10px #5710c9, 0 0 20px #754eca;
+        text-shadow:
+          0 0 5px #6923cc,
+          0 0 15px #c5a3ff,
+          0 0 25px #a775f9;
+        color: #f2ebff;
       }
     </style>
   </head>
@@ -24,15 +29,40 @@
     <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
       <h1 class="text-5xl md:text-6xl font-bold neon-text mb-6">Shadelight</h1>
       <p class="text-xl text-gray-400 mb-8 max-w-2xl">
-        Unveil your computers looming threats. 
+        Unveil your computer's looming threats.
       </p>
       <a
         href="https://github.com/PuffyBee/Shadelight"
         target="_blank"
-        class="bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-3 px-6 rounded-lg transition"
+        class="bg-purple-400 hover:bg-purple-500 text-black font-bold py-3 px-6 rounded-lg transition"
       >
         View on GitHub
       </a>
+    </section>
+
+    <!-- Download Section -->
+    <section class="py-20 px-8 bg-gray-950">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-bold text-purple-400 mb-8">Get Shadelight</h2>
+        <p class="text-lg text-gray-400 mb-6">
+          Install locally and scan your network or files in seconds.
+        </p>
+        <div class="flex justify-center space-x-4 mb-8">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" alt="Windows" class="h-8 w-8" />
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux" class="h-8 w-8" />
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" alt="macOS" class="h-8 w-8" />
+        </div>
+        <div class="bg-black border border-gray-700 text-left p-6 rounded-lg font-mono text-sm text-green-400 max-w-2xl mx-auto overflow-x-auto">
+          <code>
+git clone https://github.com/PuffyBee/Shadelight.git<br>
+cd shadelight<br>
+python -m venv venv<br>
+source venv/bin/activate  # Windows: venv\Scripts\activate<br>
+pip install -r requirements.txt<br>
+python -m shadelight 192.168.1.0/24 --ports 22,80,443
+          </code>
+        </div>
+      </div>
     </section>
   </body>
 </html>
