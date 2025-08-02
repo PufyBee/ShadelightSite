@@ -6,8 +6,28 @@ body {
 
 .neon-text {
   font-family: 'Orbitron', sans-serif;
-  color: #7411c5;
-  text-shadow: 0 0 2px #00000000, 0 0 6px #00000000;
+  color: #d6a3ff; /* Soft purple */
+  text-shadow:
+    0 0 5px #b36bff,
+    0 0 10px #a84dff,
+    0 0 20px #9933ff;
   font-weight: 600;
+  animation: pulse 2s infinite ease-in-out;
 }
 
+@keyframes pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 5px #b36bff,
+      0 0 10px #a84dff,
+      0 0 20px #9933ff;
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 10px #cc80ff,
+      0 0 20px #bb66ff,
+      0 0 30px #a84dff;
+    opacity: 0.8;
+  }
+}
