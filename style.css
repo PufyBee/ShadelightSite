@@ -1,0 +1,13 @@
+body {
+  background-color: #000000;
+  color: #f1f1f1;
+  font-family: sans-serif;
+}
+
+.neon-text {
+  font-family: 'Orbitron', sans-serif;
+  color: #00f5ff;
+  text-shadow: 0 0 2px #00f5ff, 0 0 6px #008b99;
+  font-weight: 600;
+}
+
