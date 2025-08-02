@@ -10,72 +10,26 @@
     />
     <style>
       body {
-        background-color: #000;
-        color: #e0d6f5;
+        background-color: #000000;
+        color: #f1f1f1;
         overflow-x: hidden;
       }
-
-      .neon-purple {
-        text-shadow:
-          0 0 5px #b873ff,
-          0 0 10px #b873ff,
-          0 0 20px #b873ff;
-        color: #e0d6f5;
-      }
-
-      .light-ray::before,
-      .light-ray::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 200%;
-        height: 100%;
-        background: linear-gradient(
-          120deg,
-          transparent,
-          rgba(176, 111, 255, 0.08),
-          transparent
-        );
-        animation: rays 10s linear infinite;
-        z-index: 0;
-      }
-
-      .light-ray::after {
-        animation-delay: 5s;
-        background: linear-gradient(
-          150deg,
-          transparent,
-          rgba(176, 111, 255, 0.05),
-          transparent
-        );
-      }
-
-      @keyframes rays {
-        0% {
-          transform: translateX(0%);
-        }
-        100% {
-          transform: translateX(100%);
-        }
-      }
-
-      .content {
-        position: relative;
-        z-index: 1;
+      .neon-text {
+        text-shadow: 0 0 5px #00ffe0, 0 0 10px #00ffe0, 0 0 20px #00ffe0;
       }
     </style>
   </head>
-  <body class="relative font-sans light-ray">
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 content">
-      <h1 class="text-6xl md:text-7xl font-extrabold neon-purple mb-8">Shadelight</h1>
-      <p class="text-xl text-gray-400 mb-10 max-w-xl">
-        A sleek, professional-grade security scanner. Built for learners. Ready for experts.
+  <body class="font-sans">
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
+      <h1 class="text-5xl md:text-6xl font-bold neon-text mb-6">Shadelight</h1>
+      <p class="text-xl text-gray-400 mb-8 max-w-2xl">
+        A sleek, professional-grade security scanner for networks and files. Built for learners. Ready for experts.
       </p>
       <a
         href="https://github.com/PuffyBee/Shadelight"
         target="_blank"
-        class="bg-purple-400 hover:bg-purple-500 text-black font-bold py-3 px-6 rounded-lg transition"
+        class="bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-3 px-6 rounded-lg transition"
       >
         View on GitHub
       </a>
