@@ -22,6 +22,35 @@
           0 0 25px #a775f9;
         color: #f2ebff;
       }
+
+      .btn-primary {
+        background: #8b5cf6;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #7c3aed;
+      }
+      .shadow-glow {
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+      }
+      .badge {
+        background: rgba(139,92,246,0.1);
+        color: #c2abf3;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        display: inline-block;
+        margin-bottom: 4px;
+      }
+      a.download-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .monospace-box code {
+        display: block;
+        white-space: pre-wrap;
+      }
     </style>
   </head>
   <body class="font-sans">
@@ -31,38 +60,105 @@
       <p class="text-xl text-gray-400 mb-8 max-w-2xl">
         Unveil your computer's looming threats.
       </p>
-      <a
-        href="https://github.com/PufyBee/Shadelight"
-        target="_blank"
-        class="bg-purple-400 hover:bg-purple-500 text-black font-bold py-3 px-6 rounded-lg transition"
-      >
-        View on GitHub
-      </a>
+      <div class="flex gap-4">
+        <a
+          href="https://github.com/PufyBee/Shadelight-electron"
+          target="_blank"
+          class="bg-purple-400 hover:bg-purple-500 text-black font-bold py-3 px-6 rounded-lg transition"
+        >
+          View App Repo
+        </a>
+        <a
+          href="https://github.com/PufyBee/Shadelight"
+          target="_blank"
+          class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition"
+        >
+          View Backend
+        </a>
+      </div>
     </section>
 
     <!-- Download Section -->
     <section class="py-20 px-8 bg-gray-950">
       <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl font-bold text-purple-400 mb-8">Get Shadelight</h2>
-        <p class="text-lg text-gray-400 mb-6">
-          Install locally and scan your network or files in seconds.
-        </p>
+        <h2 class="text-4xl font-bold text-purple-400 mb-4">Get Shadelight</h2>
+        <div id="release-container" class="mb-8">
+          <div class="badge" id="version-badge">Loading release...</div>
+          <div id="release-notes" class="text-sm text-gray-300 mb-4"></div>
+          <div id="download-buttons" class="flex flex-col sm:flex-row justify-center gap-4 mt-2">
+            <!-- populated by JS -->
+          </div>
+          <div class="mt-3 text-xs text-gray-400" id="checksum-display">
+            <!-- checksum -->
+          </div>
+        </div>
+
         <div class="flex justify-center space-x-4 mb-8">
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" alt="Windows" class="h-8 w-8" />
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux" class="h-8 w-8" />
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" alt="macOS" class="h-8 w-8" />
         </div>
-        <div class="bg-black border border-gray-700 text-left p-6 rounded-lg font-mono text-sm text-green-400 max-w-2xl mx-auto overflow-x-auto">
+        <div class="bg-black border border-gray-700 text-left p-6 rounded-lg font-mono text-sm text-green-400 max-w-2xl mx-auto overflow-x-auto monospace-box">
           <code>
-git clone https://github.com/PufyBee/Shadelight.git<br>
-cd shadelight<br>
-python -m venv venv<br>
-source venv/bin/activate  # Windows: venv\Scripts\activate<br>
-pip install -r requirements.txt<br>
+git clone https://github.com/PufyBee/Shadelight.git
+cd shadelight
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Unix / macOS:
+# source venv/bin/activate
+pip install -r requirements.txt
 python -m shadelight 192.168.1.0/24 --ports 22,80,443
           </code>
         </div>
       </div>
     </section>
+
+    <script>
+      // Hardcoded fallback checksum (from you)
+      const FALLBACK_CHECKSUM = "SHA256: 10f87fe81cf5be1c50099002d8c34e0d45467653f9a92fa28901ef1e1b9e5ca9";
+
+      async function loadLatestRelease() {
+        const container = document.getElementById('release-container');
+        const versionBadge = document.getElementById('version-badge');
+        const notesEl = document.getElementById('release-notes');
+        const buttonsEl = document.getElementById('download-buttons');
+        const checksumEl = document.getElementById('checksum-display');
+
+        try {
+          const res = await fetch('https://api.github.com/repos/PufyBee/Shadelight-electron/releases/latest');
+          if (!res.ok) throw new Error('Failed to fetch release');
+          const data = await res.json();
+
+          versionBadge.textContent = `Version: ${data.tag_name}`;
+          notesEl.textContent = data.body?.split('\n')[0] || 'Latest stable release.';
+
+          // find Windows installer .exe
+          const exeAsset = data.assets.find(a => a.name.endsWith('.exe'));
+          if (exeAsset) {
+            const link = document.createElement('a');
+            link.href = exeAsset.browser_download_url;
+            link.className = 'btn-primary font-bold py-3 px-6 rounded-lg transition inline-flex items-center gap-2';
+            link.textContent = `Download Installer (${data.tag_name})`;
+            link.setAttribute('download', '');
+            buttonsEl.appendChild(link);
+          } else {
+            const notice = document.createElement('div');
+            notice.textContent = 'No installer asset found in latest release.';
+            buttonsEl.appendChild(notice);
+          }
+
+          checksumEl.textContent = FALLBACK_CHECKSUM;
+        } catch (e) {
+          versionBadge.textContent = 'Release info unavailable';
+          notesEl.textContent = '';
+          buttonsEl.innerHTML = `<div class="text-red-400">Could not load download. Try again later.</div>`;
+          checksumEl.textContent = FALLBACK_CHECKSUM;
+          console.error(e);
+        }
+      }
+
+      loadLatestRelease();
+    </script>
   </body>
 </html>
