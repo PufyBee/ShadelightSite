@@ -115,50 +115,79 @@ python -m shadelight 192.168.1.0/24 --ports 22,80,443
     </section>
 
     <script>
-      // Hardcoded fallback checksum (from you)
-      const FALLBACK_CHECKSUM = "SHA256: 10f87fe81cf5be1c50099002d8c34e0d45467653f9a92fa28901ef1e1b9e5ca9";
+  // Fallback if we don’t have a checksum for a given asset
+  const FALLBACK_CHECKSUM = "SHA256: 10f87fe81cf5be1c50099002d8c34e0d45467653f9a92fa28901ef1e1b9e5ca9";
 
-      async function loadLatestRelease() {
-        const container = document.getElementById('release-container');
-        const versionBadge = document.getElementById('version-badge');
-        const notesEl = document.getElementById('release-notes');
-        const buttonsEl = document.getElementById('download-buttons');
-        const checksumEl = document.getElementById('checksum-display');
+  // Add real checksums here after you compute them for each build artifact
+  const CHECKSUMS = {
+    "Shadelight Setup 0.3.0.exe": "SHA256: YOUR_WINDOWS_EXE_CHECKSUM",
+    "Shadelight-0.3.0.dmg":        "SHA256: YOUR_MAC_DMG_CHECKSUM",
+    "Shadelight-0.3.0.AppImage":   "SHA256: YOUR_LINUX_APPIMAGE_CHECKSUM"
+  };
 
-        try {
-          const res = await fetch('https://api.github.com/repos/PufyBee/Shadelight-electron/releases/latest');
-          if (!res.ok) throw new Error('Failed to fetch release');
-          const data = await res.json();
+  async function loadLatestRelease() {
+    const repo = "PufyBee/Shadelight-electron";
+    const apiUrl = `https://api.github.com/repos/${repo}/releases/latest`;
 
-          versionBadge.textContent = `Version: ${data.tag_name}`;
-          notesEl.textContent = data.body?.split('\n')[0] || 'Latest stable release.';
+    const versionBadge = document.getElementById("version-badge");
+    const notesEl      = document.getElementById("release-notes");
+    const buttonsEl    = document.getElementById("download-buttons");
+    const checksumEl   = document.getElementById("checksum-display");
 
-          // find Windows installer .exe
-          const exeAsset = data.assets.find(a => a.name.endsWith('.exe'));
-          if (exeAsset) {
-            const link = document.createElement('a');
-            link.href = exeAsset.browser_download_url;
-            link.className = 'btn-primary font-bold py-3 px-6 rounded-lg transition inline-flex items-center gap-2';
-            link.textContent = `Download Installer (${data.tag_name})`;
-            link.setAttribute('download', '');
-            buttonsEl.appendChild(link);
-          } else {
-            const notice = document.createElement('div');
-            notice.textContent = 'No installer asset found in latest release.';
-            buttonsEl.appendChild(notice);
+    try {
+      const res = await fetch(apiUrl, {
+        headers: { "Accept": "application/vnd.github.v3+json" }
+      });
+      if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
+      const data = await res.json();
+
+      // Show version and first line of notes
+      versionBadge.textContent = `Version: ${data.tag_name}`;
+      notesEl.textContent     = data.body?.split("\n")[0] || "Latest stable release.";
+
+      // Clear any old buttons
+      buttonsEl.innerHTML = "";
+
+      // Map file extensions to user-friendly names
+      const platforms = {
+        ".exe":      "Windows",
+        ".dmg":      "macOS",
+        ".AppImage": "Linux"
+      };
+
+      // Create a download button for each supported asset
+      data.assets.forEach(asset => {
+        for (const [ext, name] of Object.entries(platforms)) {
+          if (asset.name.endsWith(ext)) {
+            const btn = document.createElement("a");
+            btn.href        = asset.browser_download_url;
+            btn.className   = "btn-primary font-bold py-3 px-6 rounded-lg transition inline-flex items-center gap-2";
+            btn.textContent = `Download for ${name}`;
+            btn.setAttribute("download", "");
+
+            // When clicked, update the checksum display
+            btn.addEventListener("click", () => {
+              checksumEl.textContent = CHECKSUMS[asset.name] || FALLBACK_CHECKSUM;
+            });
+
+            buttonsEl.appendChild(btn);
           }
-
-          checksumEl.textContent = FALLBACK_CHECKSUM;
-        } catch (e) {
-          versionBadge.textContent = 'Release info unavailable';
-          notesEl.textContent = '';
-          buttonsEl.innerHTML = `<div class="text-red-400">Could not load download. Try again later.</div>`;
-          checksumEl.textContent = FALLBACK_CHECKSUM;
-          console.error(e);
         }
-      }
+      });
 
-      loadLatestRelease();
-    </script>
+      // Default checksum shown until user clicks a button
+      checksumEl.textContent = FALLBACK_CHECKSUM;
+    } catch (e) {
+      versionBadge.textContent = "Release info unavailable";
+      notesEl.textContent     = "";
+      buttonsEl.innerHTML     = `<div class="text-red-400">Could not load download. Try again later.</div>`;
+      checksumEl.textContent  = FALLBACK_CHECKSUM;
+      console.error("Error loading release:", e);
+    }
+  }
+
+  loadLatestRelease();
+</script>
+
   </body>
 </html>
