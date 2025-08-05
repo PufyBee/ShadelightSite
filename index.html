@@ -114,20 +114,27 @@ python -m shadelight 192.168.1.0/24 --ports 22,80,443
       </div>
     </section>
     
-    <section id="docker-cli">
-  <h3>Command-line Scanner (Docker)</h3>
-  <p>For power users or automation, run the CLI version in one Docker command:</p>
-  <pre><code>
+<section id="docker-cli" class="py-16 bg-gray-900 text-center">
+  <div class="max-w-xl mx-auto">
+    <h3 class="text-2xl font-bold text-purple-400 mb-4">Command-line Scanner (Docker)</h3>
+    <p class="text-gray-300 mb-6">
+      For power users or automation, run the CLI version in one Docker command:
+    </p>
+    <pre class="bg-black border border-gray-700 text-left p-6 rounded-lg font-mono text-sm text-green-400 overflow-x-auto mb-6">
 docker pull samaharrison/shadelight-scanner:latest
 docker run --rm -v /path/to/files:/data \
   samaharrison/shadelight-scanner:latest /data
-  </code></pre>
-  <p>
-    <a href="https://hub.docker.com/r/samaharrison/shadelight-scanner" target="_blank">
+    </pre>
+    <a
+      href="https://hub.docker.com/r/samaharrison/shadelight-scanner"
+      target="_blank"
+      class="inline-block btn-primary shadow-glow font-bold py-3 px-8 rounded-lg transition"
+    >
       View on Docker Hub
     </a>
-  </p>
+  </div>
 </section>
+
     <script>
   // Fallback if we don’t have a checksum for a given asset
   const FALLBACK_CHECKSUM = "SHA256: 10f87fe81cf5be1c50099002d8c34e0d45467653f9a92fa28901ef1e1b9e5ca9";
